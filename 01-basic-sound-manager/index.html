@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Basic Sound Manager Demo</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .container {
+      background: white;
+      border-radius: 20px;
+      padding: 40px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      max-width: 600px;
+      width: 100%;
+    }
+
+    h1 {
+      color: #333;
+      margin-bottom: 10px;
+      font-size: 28px;
+    }
+
+    .subtitle {
+      color: #666;
+      margin-bottom: 30px;
+      font-size: 14px;
+    }
+
+    .section {
+      margin-bottom: 30px;
+    }
+
+    .section h2 {
+      color: #667eea;
+      font-size: 18px;
+      margin-bottom: 15px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .button-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 12px;
+    }
+
+    button {
+      padding: 15px 20px;
+      border: none;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      color: white;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    button:active {
+      transform: translateY(0);
+    }
+
+    .btn-move { background: #10b981; }
+    .btn-capture { background: #ef4444; }
+    .btn-check { background: #f59e0b; }
+    .btn-victory { background: #8b5cf6; }
+    .btn-defeat { background: #6366f1; }
+    
+    .tone-controls {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    .control-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    label {
+      font-size: 13px;
+      color: #666;
+      font-weight: 600;
+    }
+
+    input[type="range"] {
+      width: 100%;
+      height: 6px;
+      border-radius: 3px;
+      background: #e5e7eb;
+      outline: none;
+      -webkit-appearance: none;
+    }
+
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: #667eea;
+      cursor: pointer;
+    }
+
+    input[type="range"]::-moz-range-thumb {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: #667eea;
+      cursor: pointer;
+      border: none;
+    }
+
+    select {
+      padding: 10px;
+      border: 2px solid #e5e7eb;
+      border-radius: 8px;
+      font-size: 14px;
+      color: #333;
+      background: white;
+      cursor: pointer;
+    }
+
+    .btn-custom {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      grid-column: 1 / -1;
+    }
+
+    .toggle-audio {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      padding: 12px 24px;
+      background: white;
+      border: none;
+      border-radius: 50px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: 600;
+      color: #667eea;
+      transition: all 0.3s ease;
+    }
+
+    .toggle-audio:hover {
+      transform: scale(1.05);
+      box-shadow: 0 6px 25px rgba(0, 0, 0, 0.3);
+    }
+
+    .toggle-audio.muted {
+      color: #ef4444;
+    }
+
+    .value-display {
+      display: inline-block;
+      background: #f3f4f6;
+      padding: 4px 12px;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 600;
+      color: #667eea;
+    }
+
+    @media (max-width: 600px) {
+      .container {
+        padding: 25px;
+      }
+
+      h1 {
+        font-size: 24px;
+      }
+
+      .button-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <button class="toggle-audio" id="toggleAudio">🔊 Sound On</button>
+
+  <div class="container">
+    <h1>🎵 Basic Sound Manager</h1>
+    <p class="subtitle">Explore Web Audio API with the chess game sound system</p>
+
+    <div class="section">
+      <h2>🎮 Chess Game Sounds</h2>
+      <div class="button-grid">
+        <button class="btn-move" id="btnMove">♟️ Move</button>
+        <button class="btn-capture" id="btnCapture">⚔️ Capture</button>
+        <button class="btn-check" id="btnCheck">⚠️ Check</button>
+        <button class="btn-victory" id="btnVictory">👑 Victory</button>
+        <button class="btn-defeat" id="btnDefeat">😔 Defeat</button>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>🎹 Custom Tone Generator</h2>
+      <div class="tone-controls">
+        <div class="control-group">
+          <label>Frequency: <span class="value-display" id="freqValue">440 Hz</span></label>
+          <input type="range" id="frequency" min="100" max="2000" value="440" step="10">
+        </div>
+        
+        <div class="control-group">
+          <label>Duration: <span class="value-display" id="durValue">0.5s</span></label>
+          <input type="range" id="duration" min="0.05" max="3" value="0.5" step="0.05">
+        </div>
+        
+        <div class="control-group">
+          <label>Volume: <span class="value-display" id="volValue">30%</span></label>
+          <input type="range" id="volume" min="0" max="100" value="30">
+        </div>
+        
+        <div class="control-group">
+          <label>Waveform</label>
+          <select id="waveform">
+            <option value="sine">Sine (smooth, pure)</option>
+            <option value="square">Square (harsh, retro)</option>
+            <option value="sawtooth">Sawtooth (bright, buzzy)</option>
+            <option value="triangle">Triangle (soft, mellow)</option>
+          </select>
+        </div>
+
+        <button class="btn-custom" id="btnCustom">▶️ Play Custom Tone</button>
+      </div>
+    </div>
+  </div>
+
+  <script type="module">
+    import { SoundManager } from './SoundManager.js';
+
+    const audio = new SoundManager();
+    let isEnabled = true;
+
+    // Chess game sound buttons
+    document.getElementById('btnMove').addEventListener('click', () => audio.playMove());
+    document.getElementById('btnCapture').addEventListener('click', () => audio.playCapture());
+    document.getElementById('btnCheck').addEventListener('click', () => audio.playCheck());
+    document.getElementById('btnVictory').addEventListener('click', () => audio.playGameEnd(true));
+    document.getElementById('btnDefeat').addEventListener('click', () => audio.playGameEnd(false));
+
+    // Toggle audio
+    const toggleBtn = document.getElementById('toggleAudio');
+    toggleBtn.addEventListener('click', () => {
+      isEnabled = !isEnabled;
+      audio.setEnabled(isEnabled);
+      toggleBtn.textContent = isEnabled ? '🔊 Sound On' : '🔇 Sound Off';
+      toggleBtn.classList.toggle('muted', !isEnabled);
+    });
+
+    // Custom tone controls
+    const freqSlider = document.getElementById('frequency');
+    const durSlider = document.getElementById('duration');
+    const volSlider = document.getElementById('volume');
+    const waveformSelect = document.getElementById('waveform');
+
+    const freqValue = document.getElementById('freqValue');
+    const durValue = document.getElementById('durValue');
+    const volValue = document.getElementById('volValue');
+
+    freqSlider.addEventListener('input', (e) => {
+      freqValue.textContent = `${e.target.value} Hz`;
+    });
+
+    durSlider.addEventListener('input', (e) => {
+      durValue.textContent = `${parseFloat(e.target.value).toFixed(2)}s`;
+    });
+
+    volSlider.addEventListener('input', (e) => {
+      volValue.textContent = `${e.target.value}%`;
+    });
+
+    // Play custom tone
+    document.getElementById('btnCustom').addEventListener('click', () => {
+      const frequency = parseInt(freqSlider.value);
+      const duration = parseFloat(durSlider.value);
+      const volume = parseInt(volSlider.value) / 100;
+      const waveform = waveformSelect.value;
+
+      audio.playTone(frequency, duration, waveform, volume);
+    });
+  </script>
+</body>
+</html>

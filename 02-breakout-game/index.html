@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Breakout with Web Audio</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 20px;
+      background: #0a0e27;
+      color: #fff;
+      font-family: 'Courier New', monospace;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+      min-height: 100vh;
+    }
+    
+    h1 {
+      font-size: 32px;
+      text-align: center;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 10px;
+    }
+
+    .description {
+      text-align: center;
+      color: #9ca3af;
+      max-width: 600px;
+      margin-bottom: 10px;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+    
+    canvas {
+      border: 2px solid #3b82f6;
+      box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
+      border-radius: 8px;
+      background: #0a0e27;
+    }
+    
+    .controls {
+      display: flex;
+      gap: 15px;
+      align-items: center;
+      flex-wrap: wrap;
+      justify-content: center;
+      background: rgba(255, 255, 255, 0.05);
+      padding: 20px;
+      border-radius: 12px;
+      backdrop-filter: blur(10px);
+    }
+    
+    button {
+      padding: 12px 24px;
+      background: #3b82f6;
+      border: none;
+      color: white;
+      cursor: pointer;
+      font-size: 16px;
+      border-radius: 8px;
+      font-family: 'Courier New', monospace;
+      font-weight: bold;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+    }
+    
+    button:hover {
+      background: #2563eb;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
+    }
+
+    button:active {
+      transform: translateY(0);
+    }
+    
+    input[type="range"] {
+      width: 200px;
+      height: 6px;
+      border-radius: 3px;
+      background: rgba(255, 255, 255, 0.1);
+      outline: none;
+      -webkit-appearance: none;
+    }
+
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: #3b82f6;
+      cursor: pointer;
+      box-shadow: 0 2px 8px rgba(59, 130, 246, 0.5);
+    }
+
+    input[type="range"]::-moz-range-thumb {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: #3b82f6;
+      cursor: pointer;
+      border: none;
+      box-shadow: 0 2px 8px rgba(59, 130, 246, 0.5);
+    }
+
+    label {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: #e5e7eb;
+      font-size: 14px;
+    }
+
+    .instructions {
+      background: rgba(255, 255, 255, 0.05);
+      padding: 20px;
+      border-radius: 12px;
+      max-width: 600px;
+      backdrop-filter: blur(10px);
+    }
+
+    .instructions h2 {
+      color: #3b82f6;
+      margin-bottom: 10px;
+      font-size: 18px;
+    }
+
+    .instructions ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .instructions li {
+      padding: 8px 0;
+      color: #d1d5db;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .instructions li::before {
+      content: '▸ ';
+      color: #3b82f6;
+      font-weight: bold;
+    }
+
+    @media (max-width: 700px) {
+      canvas {
+        width: 100% !important;
+        height: auto !important;
+      }
+
+      .controls {
+        flex-direction: column;
+      }
+
+      input[type="range"] {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1>🎮 Breakout: Web Audio Edition</h1>
+  <p class="description">
+    A complete game demonstrating spatial audio, pitch variation, and musical motifs.
+    Listen how sounds change based on where you hit!
+  </p>
+  
+  <canvas id="gameCanvas" width="600" height="600"></canvas>
+  
+  <div class="controls">
+    <button id="toggleAudio">🔊 Sound On</button>
+    <label>
+      Volume:
+      <input type="range" id="volumeSlider" min="0" max="100" value="70">
+      <span id="volumeValue">70%</span>
+    </label>
+  </div>
+
+  <div class="instructions">
+    <h2>📖 How to Play</h2>
+    <ul>
+      <li><strong>Space</strong> - Start game</li>
+      <li><strong>Arrow Keys</strong> or <strong>Mouse</strong> - Move paddle</li>
+      <li>Break all bricks to complete the level</li>
+      <li>Listen to the spatial audio - pitch changes by brick row!</li>
+      <li>Notice the pitch variation on paddle hits for realism</li>
+      <li>Enjoy the musical victory/defeat melodies</li>
+    </ul>
+  </div>
+
+  <script src="audio-breakout.js"></script>
+</body>
+</html>
