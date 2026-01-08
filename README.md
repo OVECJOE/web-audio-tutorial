@@ -222,7 +222,7 @@ This repository is designed as a learning resource. Feel free to:
 ## 💬 Support
 
 For questions or discussions about the tutorial:
-- Read the full article: [Mastering Web Audio](https://wordarch.com/blog/mastering-web-audio)
+- Read the full article: [Mastering Web Audio](https://wordarch.vercel.app/blog/mastering-web-audio)
 - Open an issue in this repository
 - Check the code comments for detailed explanations
 
